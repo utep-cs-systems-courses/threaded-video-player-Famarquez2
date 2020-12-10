@@ -15,7 +15,7 @@ displayingQueue = ThreadyQueue(queueSize)
 
 # filename of clip to load
 global filename
-filename = 'clip.mp4'
+filename = 'clip.mp4' # Video
 
 class DisplayingThread(threading.Thread):
     def __init__(self, name=None):
@@ -25,11 +25,9 @@ class DisplayingThread(threading.Thread):
     def run(self):
         print("Display is running!")
         
-        # initialize frame count
-        count = 0
+        count = 0  # initialize frame count
         
-        #get first frame
-        frame = displayingQueue.get()
+        frame = displayingQueue.get() # get first Frame
         
         while frame != 'End':
             print(f'Displaying frame {count}')        
@@ -44,8 +42,9 @@ class DisplayingThread(threading.Thread):
             frame = displayingQueue.get()
 
         print('Finished displaying all frames')
-        # cleanup the windows
-        cv2.destroyAllWindows()    
+        
+        cv2.destroyAllWindows()  # Cleanup the windows 
+    
 
 class ExtractorThread(threading.Thread):
     def __init__(self, name=None):
@@ -55,14 +54,12 @@ class ExtractorThread(threading.Thread):
     def run(self):
         print("Extract is running!")
         
-        # Initialize frame count 
-        count = 0
-        
-        # open video file
-        vidcap = cv2.VideoCapture(filename)
+        count = 0  # Initialize frame count 
+               
+        vidcap = cv2.VideoCapture(filename)  # open video file
         
         # read first image
-        success,image = vidcap.read()
+        success,image = vidcap.read()  # Reading each frame 1 by 1
         print(f'Reading frame {count} {success}')
         
         while success:                 
@@ -85,8 +82,7 @@ class GreyscalingThread(threading.Thread):
     def run(self):
         print("Greyscale is running!")
         
-        # Initialize frame count 
-        count = 0
+        count = 0  # Initialize frame count 
         
         # read first image
         colorFrame = extractionQueue.get()
@@ -106,12 +102,15 @@ class GreyscalingThread(threading.Thread):
         displayingQueue.put('End')
 
 
-extract = ExtractorThread(name='producer')
+# Start Thread Producer
+extract = ExtractorThread(name='producer')  # Calls Extractor Thread Class
 extract.start()
 
-greyscale = GreyscalingThread(name='greyscaling')
+# Start Thread greyScaling
+greyscale = GreyscalingThread(name='greyscaling')  # Calls GreyScaling Thread Class
 greyscale.start()
 
-display = DisplayingThread(name='consumer')
+# Start Thread Consumer
+display = DisplayingThread(name='consumer')  # Calls Display Thread Class
 display.start()
 
